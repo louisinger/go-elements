@@ -34,7 +34,7 @@ type AddressInfo struct {
 // address to which BTC should be sent in BTC network and claim script that is
 // to be used in claimpegin RPC alongside with bitcoinTx and txoutproof
 func GetAddressInfo(
-	privateKey btcec.PrivateKey,
+	publicKey []byte,
 	fedpegInfo FedpegInfo,
 	networkType NetworkType,
 	isDynaFedEnabled bool,
@@ -42,9 +42,12 @@ func GetAddressInfo(
 ) (*AddressInfo, error) {
 	liquidNetwork, btcNetwork := getNetworkParams(networkType)
 
-	p2wkh := getClaimWitnessScript(privateKey, liquidNetwork)
+	p2wkh, err := ClaimWitnessScript(publicKey, liquidNetwork)
+	if err != nil {
+		return nil, err
+	}
 
-	mainChainAddress, err := createMainChainAddress(
+	mainChainAddress, err := PeginAddress(
 		contract,
 		btcNetwork,
 		isDynaFedEnabled,
@@ -77,19 +80,25 @@ func getNetworkParams(
 	return liquidNetwork, btcNetwork
 }
 
-func getClaimWitnessScript(
-	privateKey btcec.PrivateKey,
+func ClaimWitnessScript(
+	publicKeyBytes []byte,
 	net *network.Network,
-) string {
+) (string, error) {
+
+	publicKey, err := btcec.ParsePubKey(publicKeyBytes, btcec.S256())
+	if err != nil {
+		return "", err
+	}
+
 	p2wpkh := payment.FromPublicKey(
-		privateKey.PubKey(),
+		publicKey,
 		net,
 		nil,
 	)
-	return hex.EncodeToString(p2wpkh.WitnessScript)
+	return hex.EncodeToString(p2wpkh.WitnessScript), nil
 }
 
-func createMainChainAddress(
+func PeginAddress(
 	contract []byte,
 	btcNetwork *chaincfg.Params,
 	isDynaFedEnabled bool,
