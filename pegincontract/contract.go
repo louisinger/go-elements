@@ -9,7 +9,7 @@ import (
 	"github.com/btcsuite/btcd/txscript"
 
 	"github.com/vulpemventures/go-elements/address"
-	"github.com/vulpemventures/go-secp256k1-zkp"
+	secp256k1 "github.com/vulpemventures/go-secp256k1-zkp"
 )
 
 const (

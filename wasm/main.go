@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"syscall/js"
 
-	"github.com/btcsuite/btcd/btcec"
 	"github.com/vulpemventures/go-elements/pegin"
 )
 
@@ -19,22 +18,39 @@ func main() {
 // GetPeginAddressWrapper returns the javascript bind for pegin/GetAddressInfo function
 func GetPeginAddressWrapper() js.Func {
 	return js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		privKey, _ := btcec.PrivKeyFromBytes(btcec.S256(), h2b(args[0].String()))
-		fedPegInfo := args[1].String()
+		key, err := h2b(args[0].String())
+		if err != nil {
+			return err
+		}
+
+		fedPegScript, err := h2b(args[1].String())
+		if err != nil {
+			return err
+		}
+
 		net := pegin.NetworkType(args[2].Int())
 		isDynaFed := args[3].Bool()
-		contract := h2b(args[4].String())
-		pegin.GetAddressInfo(
-			*privKey,
-			fedPegInfo,
+
+		contract, err := h2b(args[4].String())
+		if err != nil {
+			return err
+		}
+
+		addressInfo, err := pegin.GetAddressInfo(
+			key,
+			pegin.FedpegInfo{
+				FedpegScript: fedPegScript,
+			},
 			net,
 			isDynaFed,
 			contract,
 		)
-		return map[string]interface{}{
-			"hello":  "world",
-			"answer": 42,
+
+		if err != nil {
+			return err
 		}
+
+		return addressInfo.ClaimScript
 	})
 }
 
@@ -42,7 +58,6 @@ func b2h(buf []byte) string {
 	return hex.EncodeToString(buf)
 }
 
-func h2b(str string) []byte {
-	buf, _ := hex.DecodeString(str)
-	return buf
+func h2b(str string) ([]byte, error) {
+	return hex.DecodeString(str)
 }

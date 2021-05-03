@@ -9,9 +9,11 @@ test:
 
 ## build-wasm: builds the go code to wasm
 build-wasm: 
-	GOOS=js GOARCH=wasm go build -o ./wasm/assets/main.wasm ./wasm/main.go
+	GOOS=js GOARCH=wasm go build -o ./wasm/src/main.wasm ./wasm/main.go
 
 ## run-wasm: runs a server with wasm loaded on :8080
-run-wasm: build-wasm
-	@go run ./wasm/server/main.go
+run-wasm: 
+	GOOS=linux GOARCH=amd64 go run ./wasm/server/main.go
+	 
+
 	
