@@ -7,15 +7,14 @@ import (
 	"github.com/vulpemventures/go-elements/pegin"
 )
 
-// Main function: it sets up our Wasm application
+// main binds go wrappers to js global scope functions
 func main() {
-	// Define the function in the JavaScript scope
 	js.Global().Set("getPeginAddress", GetPeginAddressWrapper())
-	// Prevent the function from returning, which is required in a wasm module
-	select {}
+
+	select {} // prevents the function to stop
 }
 
-// GetPeginAddressWrapper returns the javascript bind for pegin/GetAddressInfo function
+// GetPeginAddressWrapper returns the javascript bind function for pegin.GetAddressInfo
 func GetPeginAddressWrapper() js.Func {
 	return js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		key, err := h2b(args[0].String())
@@ -57,10 +56,12 @@ func GetPeginAddressWrapper() js.Func {
 	})
 }
 
+// encodes bytes to hex
 func b2h(buf []byte) string {
 	return hex.EncodeToString(buf)
 }
 
+// decodes hex to bytes
 func h2b(str string) ([]byte, error) {
 	return hex.DecodeString(str)
 }

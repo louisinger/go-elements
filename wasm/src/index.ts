@@ -1,7 +1,7 @@
 import "./wasm_exec.cjs";
 import { readFileSync } from "fs";
 
-const WASM_URL = "src/main.wasm";
+const WASM_URL = "src/main.wasm"; // TODO improve this??
 // @ts-ignore
 const go = new Go();
 
