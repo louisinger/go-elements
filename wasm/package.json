@@ -15,6 +15,10 @@
     "src"
   ],
   "scripts": {
-    "build": "tsdx build --tsconfig tsconfig.json --entry src/index.ts"
+    "build": "tsdx build --tsconfig tsconfig.json --entry src/index.ts",
+    "test": "tsdx test"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
