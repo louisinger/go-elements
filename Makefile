@@ -13,7 +13,7 @@ build-wasm:
 
 ## run-wasm: runs a server with wasm loaded on :8080
 run-wasm: 
-	GOOS=linux GOARCH=amd64 go run ./wasm/server/main.go
+	GOOS=linux GOARCH=amd64 go run ./wasm/web-test/server.go
 	 
 
 	

@@ -1,12 +1,12 @@
 import * as assert from 'assert';
 import { ECPair, networks } from "liquidjs-lib";
-import { loadModule, PeginModule } from '../src';
+import { loadPeginModule, PeginModule } from '../src';
 
 describe('getpeginaddress', () => {
   let peginModule: PeginModule;
 
   beforeAll(async () => {
-    peginModule = await loadModule();
+    peginModule = await loadPeginModule();
   })
 
   it('should return an object with claimScript and mainChainAddress', () => {

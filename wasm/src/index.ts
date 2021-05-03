@@ -25,7 +25,7 @@ async function webAssemblyInstance(): Promise<WebAssembly.Instance | WebAssembly
 /**
  * get the instance, run wasm and return PeginModule
  */
-export async function loadModule(): Promise<PeginModule> {
+export async function loadPeginModule(): Promise<PeginModule> {
   const instance = await webAssemblyInstance();
   go.run(instance);
   return {
