@@ -50,7 +50,10 @@ func GetPeginAddressWrapper() js.Func {
 			return err
 		}
 
-		return addressInfo.ClaimScript
+		return map[string]interface{}{
+			"claimScript":      addressInfo.ClaimScript,
+			"mainChainAddress": addressInfo.MainChainAddress,
+		}
 	})
 }
 
