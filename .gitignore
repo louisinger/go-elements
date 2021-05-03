@@ -18,4 +18,6 @@
 # WebStorm IDE project config files
 .idea
 
+# wasm project
 /wasm/node_modules
+/wasm/dist
